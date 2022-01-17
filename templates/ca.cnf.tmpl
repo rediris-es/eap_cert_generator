@@ -1,0 +1,77 @@
+# TEMPLATE FILE
+
+[ ca ]
+default_ca		= CA_default
+
+[ CA_default ]
+dir			= ./
+certs			= $dir
+crl_dir			= $dir/crl
+database		= $dir/index.txt
+new_certs_dir		= $dir
+certificate		= $dir/ca.pem
+serial			= $dir/serial
+crl			= $dir/crl.pem
+private_key		= $dir/ca.key
+RANDFILE		= $dir/.rand
+name_opt		= ca_default
+cert_opt		= ca_default
+default_days = 7300
+default_crl_days	= 30
+default_md		= sha256
+preserve		= no
+policy			= policy_match
+unique_subject 		= no
+
+[ policy_match ]
+countryName		= match
+stateOrProvinceName	= match
+organizationName	= match
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ policy_anything ]
+countryName		= optional
+stateOrProvinceName	= optional
+localityName		= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ req ]
+prompt			= no
+distinguished_name	= certificate_authority
+default_bits		= 3072
+input_password		= DEFAULT_PASSWORD
+output_password		= DEFAULT_PASSWORD
+x509_extensions		= v3_ca
+string_mask  = DEFAULT_CHARSET
+
+[ certificate_authority ]
+countryName		= DEFAULT_COUNTRY_NAME
+stateOrProvinceName	= DEFAULT_STATE
+localityName		= DEFAULT_LOCALITY
+organizationName	= DEFAULT_ORGANIZATION_NAME
+emailAddress		= DEFAULT_EMAIL
+commonName		= DEFAULT_COMMON_NAME
+
+[ v3_ca ]
+subjectKeyIdentifier	= hash
+authorityKeyIdentifier	= keyid:always,issuer:always
+basicConstraints	= critical,CA:FALSE
+crlDistributionPoints	= URI:DEFAULT_CRL
+
+#  Extensions for an intermediate CA.  See "man x509v3_config"
+#
+#  To use it, uncomment the following section, and configure it
+#  as necessary.  Also, place the external CA into a file called
+#  "external_ca.der", or "external_ca.pem".
+#
+#[ v3_intermediate_ca ]
+#subjectKeyIdentifier    = hash
+#authorityKeyIdentifier  = keyid:always,issuer
+#basicConstraints        = critical, CA:true, pathlen:0
+#keyUsage                = critical, digitalSignature, cRLSign, keyCertSign
+#crlDistributionPoints   = URI:http://www.example.com/example_ca.crl

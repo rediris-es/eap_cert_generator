@@ -1,0 +1,57 @@
+# TEMPLATE FILE
+
+[ ca ]
+default_ca		= CA_default
+
+[ CA_default ]
+dir			= ./
+certs			= $dir
+crl_dir			= $dir/crl
+database		= $dir/index.txt
+new_certs_dir		= $dir
+certificate		= $dir/server.pem
+serial			= $dir/serial
+crl			= $dir/crl.pem
+private_key		= $dir/server.key
+RANDFILE		= $dir/.rand
+name_opt		= ca_default
+cert_opt		= ca_default
+default_days = 825
+default_crl_days	= 30
+default_md		= sha256
+preserve		= no
+policy			= policy_match
+
+[ policy_match ]
+countryName		= match
+stateOrProvinceName	= match
+organizationName	= match
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ policy_anything ]
+countryName		= optional
+stateOrProvinceName	= optional
+localityName		= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ req ]
+prompt			= no
+distinguished_name	= server
+default_bits		= 3072
+input_password		= DEFAULT_PASSWORD
+output_password		= DEFAULT_PASSWORD
+
+[server]
+countryName		= DEFAULT_COUNTRY_NAME
+stateOrProvinceName	= DEFAULT_STATE
+localityName		= DEFAULT_LOCALITY
+organizationName	= DEFAULT_ORGANIZATION_NAME
+emailAddress		= DEFAULT_EMAIL
+commonName		= DEFAULT_COMMON_NAME
+
+
