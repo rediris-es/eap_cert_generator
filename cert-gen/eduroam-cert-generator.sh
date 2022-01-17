@@ -26,7 +26,7 @@ cn_server_error=0
 # Current date
 date=$(date +'%Y_%m_%d_%H_%M')
 # Files to modify and must exists
-files=("ca.cnf" "client.cnf" "dh" "inner-server.cnf" "ocsp.cnf" "passwords.mk" "server.cnf" "xpextensions")
+files=("ca.cnf" "client.cnf" "inner-server.cnf" "ocsp.cnf" "passwords.mk" "server.cnf" "xpextensions")
 # Files to store default values
 file_defaults=("ca.cnf" "client.cnf" "inner-server.cnf" "ocsp.cnf" "server.cnf")
 # Folder to store files with default values 
