@@ -26,7 +26,7 @@ cn_server_error=0
 # Current date
 date=$(date +'%Y_%m_%d_%H_%M')
 # Files to modify and must exists
-files=("ca.cnf" "client.cnf" "dh" "inner-server.cnf" "ocsp.cnf" "passwords.mk" "server.cnf" "xpextensions")
+files=("ca.cnf" "client.cnf" "inner-server.cnf" "ocsp.cnf" "passwords.mk" "server.cnf" "xpextensions")
 # Files to store default values
 file_defaults=("ca.cnf" "client.cnf" "inner-server.cnf" "ocsp.cnf" "server.cnf")
 # Folder to store files with default values 
@@ -597,7 +597,7 @@ function askForCharacterSet()
 function askForEmailAddress()
 {
   
-  printf "Dirección de correo electrónico (p. ej. ${green}eduroam@$rev_string${nc}) [${green}eduroam@$rev_string${nc}]: "
+  printf "Dirección de correo electrónico (p. ej. eduroam@$rev_string): "
   read email
 
   if [ "$email" == "" ]; then
@@ -687,7 +687,7 @@ function askForCRLProtocol()
 
   printf "\nSe ha leído: ${yellow}$crl_protocol${nc} , ¿es correcto? [s/n]: "
   read option
-  while [ "$option" != "" ] && [ "$option" != "" ] && [ "$option" != 'S' ] && [ "$option" != 'Y' ] && [ "$option" != 's' ] && [ "$option" != 'y' ] && [ "$option" != 'N' ] && [ "$option" != 'n' ]; do
+  while [ "$option" != "" ] && [ "$option" != 'S' ] && [ "$option" != 'Y' ] && [ "$option" != 's' ] && [ "$option" != 'y' ] && [ "$option" != 'N' ] && [ "$option" != 'n' ]; do
     printf "\nOpción no válida. Indica [s/n]: "
     read option
   done
@@ -697,7 +697,7 @@ function askForCRLProtocol()
   fi
   if [ "$option" == 'S' ] || [ "$option" == 'Y' ] || [ "$option" == 's' ] || [ "$option" == 'y' ]; then
     echo ""
-    print 1 $option
+    print 0 $crl_protocol
   fi
 
 }
@@ -711,7 +711,7 @@ function askForCRL()
   crl_like="$crl_protocol://$rev_string/${green}eduroam_ca.crl${nc}"
   aux="$crl_protocol://$rev_string/eduroam_ca.crl"
   printf "\nRuta hacia el fichero crl, introduce solo el valor correspondiente"
-  printf "\na la ubicación del fichero sin teclear la url completa.\n"
+  printf "\na la ubicación del fichero sin teclear la url completa.\n\n"
   printf "(p. ej.: $crl_like )\n${yellow}Esta es una opción requerida para ciertas versiones anteriores a Windows 10.${nc}\n[$crl_like]: "
   read crl
   if [ "$crl" == "" ]; then
@@ -764,7 +764,7 @@ function askForOCSPProtocol()
   fi
   if [ "$option" == 'S' ] || [ "$option" == 'Y' ] || [ "$option" == 's' ] || [ "$option" == 'y' ]; then
     echo ""
-    print 1 $option
+    print 0 $ocsp_protocol
   fi
 
 }
@@ -777,7 +777,7 @@ function askForOCSP()
   ocsp_like="$ocsp_protocol://$rev_string/${green}ocsp${nc}"
   aux="$ocsp_protocol://$rev_string/ocsp"
   printf "\nRuta hacia el servicio OCSP, introduce solo el valor correspondiente"
-  printf "\na la ruta sin teclear la url completa.\n"
+  printf "\na la ruta sin teclear la url completa.\n\n"
   printf "${yellow}Este servicio es opcional, pero se ha de indicar una URL por defecto.${nc}\n"
   printf "(p. ej.: $ocsp_like ), [$ocsp_like]: "
   read ocsp
