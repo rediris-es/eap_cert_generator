@@ -75,6 +75,7 @@ crl_protocol="https"
 # protocol for the OCSP value
 ocsp_protocol="https"
 #
+url_regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 # Functions block
 ############################################################################################################
 
@@ -673,98 +674,42 @@ function askForLocality()
 }
 
 ############################################################################################################
-# askForCRLProtocol function, allows the user to set a protocol for the CRL url                            #
-############################################################################################################
-function askForCRLProtocol()
-{
-
-  protocol_like="https"
-  printf "\nIndica el protocolo hacia la ruta donde se encontrará el fichero de la CRL (http, https) [${protocol_like}]: "
-  read crl_protocol
-  if [ "$crl_protocol" == "" ]; then
-    crl_protocol=$protocol_like
-  fi
-
-  printf "\nSe ha leído: ${yellow}$crl_protocol${nc} , ¿es correcto? [s/n]: "
-  read option
-  while [ "$option" != "" ] && [ "$option" != 'S' ] && [ "$option" != 'Y' ] && [ "$option" != 's' ] && [ "$option" != 'y' ] && [ "$option" != 'N' ] && [ "$option" != 'n' ]; do
-    printf "\nOpción no válida. Indica [s/n]: "
-    read option
-  done
-  
-  if [ "$option" == 'n' ] || [ "$option" == 'N' ]; then
-    askForCRLProtocol
-  fi
-  if [ "$option" == 'S' ] || [ "$option" == 'Y' ] || [ "$option" == 's' ] || [ "$option" == 'y' ]; then
-    echo ""
-    print 0 $crl_protocol
-  fi
-
-}
-
-############################################################################################################
 # Función askForCRL, allows the user to set the CRL url                                                    #
 ############################################################################################################
 function askForCRL()
 {
-  
-  crl_like="$crl_protocol://$rev_string/${green}eduroam_ca.crl${nc}"
+
+  crl_like="${green}$crl_protocol://$rev_string/eduroam_ca.crl${nc}"
   aux="$crl_protocol://$rev_string/eduroam_ca.crl"
-  printf "\nRuta hacia el fichero crl, introduce solo el valor correspondiente"
-  printf "\na la ubicación del fichero sin teclear la url completa.\n\n"
-  printf "(p. ej.: $crl_like )\n${yellow}Esta es una opción requerida para ciertas versiones anteriores a Windows 10.${nc}\n[$crl_like]: "
+  
+  printf "\nIndica la ruta hacia el fichero crl, se ha de especificar una url completa con el protocolo deseado (https, sftp, ...). \n\n"
+  printf "\n${yellow}Esta es una opción requerida para ciertas versiones anteriores a Windows 10.${nc}\n\n[$crl_like]: "
   read crl
+  
   if [ "$crl" == "" ]; then
     crl=$aux
-  else
-    crl="$crl_protocol://$rev_string/$crl"
   fi
 
-  printf "\nEl valor de la URL completa hacia el fichero crl es el siguiente: ${yellow}${crl}${nc} ¿Es correcto? [s/n]: "
-
-  read crl_option
-  while [ "$crl_option" != "" ] && [ "$crl_option" != 'S' ] && [ "$crl_option" != 'Y' ] && [ "$crl_option" != 's' ] && [ "$crl_option" != 'y' ] && [ "$crl_option" != 'N' ] && [ "$crl_option" != 'n' ]; do
-    printf "Opción no válida. ¿Continuar? [s/n]: "
-    read crl_option
-  done
-
-  if [ "$crl_option" == 'n' ] || [ "$crl_option" == 'N' ]; then
-    askForCRL
-  fi
-
-  if [ "$crl_option" == 's' ] || [ "$crl_option" == 'S' ]; then
+  if [[ $crl =~ $url_regex ]];
+  then
     echo ""
     print 0 "$crl"
-  fi
+  else
+    printf "\nSe ha leído: ${yellow}$crl${nc}, parece que no es válida, ¿Quieres modificarla? [s/n]: "
+    read crl_option
+    while [ "$crl_option" != "" ] && [ "$crl_option" != 'S' ] && [ "$crl_option" != 'Y' ] && [ "$crl_option" != 's' ] && [ "$crl_option" != 'y' ] && [ "$crl_option" != 'N' ] && [ "$crl_option" != 'n' ]; do
+      printf "Opción no válida. ¿Continuar? [s/n]: "
+      read crl_option
+    done
 
-}
+    if [ "$crl_option" == 'n' ] || [ "$crl_option" == 'N' ]; then
+      echo ""
+      print 0 "$crl"
+    fi
 
-############################################################################################################
-# askForOCSPProtocol function, allows the user to set a protocol for the OCSP url                          #
-############################################################################################################
-function askForOCSPProtocol()
-{
-
-  protocol_like="https"
-  printf "\nIndica el protocolo hacia la ruta donde se encontrará el fichero de la CRL (http, https) [${protocol_like}]: "
-  read ocsp_protocol
-  if [ "$ocsp_protocol" == "" ]; then
-    ocsp_protocol=$protocol_like
-  fi
-
-  printf "\nSe ha leído: ${yellow}$ocsp_protocol${nc} , ¿es correcto? [s/n]: "
-  read option
-  while [ "$option" != "" ] && [ "$option" != 'S' ] && [ "$option" != 'Y' ] && [ "$option" != 's' ] && [ "$option" != 'y' ] && [ "$option" != 'N' ] && [ "$option" != 'n' ]; do
-    printf "\nOpción no válida. Indica [s/n]: "
-    read option
-  done
-  
-  if [ "$option" == 'n' ] || [ "$option" == 'N' ]; then
-    askForOCSPProtocol
-  fi
-  if [ "$option" == 'S' ] || [ "$option" == 'Y' ] || [ "$option" == 's' ] || [ "$option" == 'y' ]; then
-    echo ""
-    print 0 $ocsp_protocol
+    if [ "$crl_option" == 's' ] || [ "$crl_option" == 'S' ]; then
+      askForCRL
+    fi
   fi
 
 }
@@ -774,36 +719,40 @@ function askForOCSPProtocol()
 ############################################################################################################
 function askForOCSP()
 {
-  ocsp_like="$ocsp_protocol://$rev_string/${green}ocsp${nc}"
+
+
+  ocsp_like="${green}$ocsp_protocol://$rev_string/ocsp${nc}"
   aux="$ocsp_protocol://$rev_string/ocsp"
-  printf "\nRuta hacia el servicio OCSP, introduce solo el valor correspondiente"
-  printf "\na la ruta sin teclear la url completa.\n\n"
-  printf "${yellow}Este servicio es opcional, pero se ha de indicar una URL por defecto.${nc}\n"
-  printf "(p. ej.: $ocsp_like ), [$ocsp_like]: "
+  
+  printf "\nRuta hacia el servicio OCSP, debes indicar el protocolo deseado (https, sftp, ...).\n\n"
+  printf "${yellow}Este servicio es opcional, pero se ha de indicar una URL por defecto.${nc}\n\n[$ocsp_like]: "
+  
   read ocsp
   if [ "$ocsp" == "" ]; then
     ocsp=$aux
-  else
-    ocsp="$ocsp_protocol://$rev_string/$ocsp"
   fi
 
-  printf "\nEl valor de la URL completa hacia el servicio OCSP es la siguiente: ${yellow}${ocsp}${nc} ¿Es correcta? [s/n]: "
-
-  read ocsp_option
-  while [ "$ocsp_option" != "" ] && [ "$ocsp_option" != 'S' ] && [ "$ocsp_option" != 'Y' ] && [ "$ocsp_option" != 's' ] && [ "$ocsp_option" != 'y' ] && [ "$ocsp_option" != 'N' ] && [ "$ocsp_option" != 'n' ]; do
-    printf "Opción no válida. ¿Continuar? [S/n]: "
-    read ocsp_option
-  done
-
-  if [ "$ocsp_option" == 'n' ] || [ "$ocsp_option" == 'N' ]; then
-    askForCRL
-  fi
-
-  if [ "$ocsp_option" == 's' ] || [ "$ocsp_option" == 'S' ]; then
+  if [[ $ocsp =~ $url_regex ]];
+  then
     echo ""
     print 0 "$ocsp"
-  fi
-  
+  else
+    printf "Se ha leído: ${yellow}$ocsp${nc}, parece que no es válida, ¿Quieres modificarla? [s/n]: "
+    read ocsp_option
+    while [ "$ocsp_option" != "" ] && [ "$ocsp_option" != 'S' ] && [ "$ocsp_option" != 'Y' ] && [ "$ocsp_option" != 's' ] && [ "$ocsp_option" != 'y' ] && [ "$ocsp_option" != 'N' ] && [ "$ocsp_option" != 'n' ]; do
+      printf "Opción no válida. ¿Continuar? [s/n]: "
+      read ocsp_option
+    done
+
+    if [ "$ocsp_option" == 'n' ] || [ "$ocsp_option" == 'N' ]; then
+      echo ""
+      print 0 "$crl"
+    fi
+
+    if [ "$ocsp_option" == 's' ] || [ "$ocsp_option" == 'S' ]; then
+      askForOCSP
+    fi
+  fi  
 }
 
 ############################################################################################################
@@ -1080,9 +1029,9 @@ if [ -z "$1" ]; then
     askForCountry
     askForState
     askForLocality
-    askForCRLProtocol
+    # askForCRLProtocol
     askForCRL
-    askForOCSPProtocol
+    # askForOCSPProtocol
     askForOCSP
     askForPassword
     # Make all certs
