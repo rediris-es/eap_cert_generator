@@ -377,9 +377,9 @@ function askForCN()
   printf "\n"
   if [ commonname == "" ]; then
     aux=$commonname
-    printf "FQDN/Nombre común (p. ej. ${green}$commonname${nc}): "
+    printf "FQDN/Nombre común del certificado de la CA (p. ej. ${green}$commonname${nc}): "
   else
-    printf "FQDN/Nombre común (p. ej. ${green}eduroam.organizacion.es${nc}): "
+    printf "FQDN/Nombre común del certificado de la CA (p. ej. ${green}eduroam.organizacion.es${nc}): "
   fi
   read commonname
 
@@ -836,7 +836,7 @@ function fillData()
       # DEFAULT email
       sed -i "s|DEFAULT_EMAIL|$email|" "$cnf_file_path"
       # DEFAULT COMMON SERVER NAME
-      sed -i "s|DEFAULT_SERVER_COMMON_NAME|$commonname|" "$cnf_file_path"
+      sed -i "s|DEFAULT_SERVER_COMMON_NAME|$servercommonname|" "$cnf_file_path"
 
       current_default_file="$parent_path/../$file_defaults_folder/$i"
 
