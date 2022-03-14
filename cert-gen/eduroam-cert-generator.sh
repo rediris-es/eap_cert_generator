@@ -7,6 +7,7 @@
 # v0.1.0 (2021-12) First release of eduroam-cert-generator.sh (beta version)
 # v0.2.0 (2021-12) Minor changes (beta version)
 # v1.0.0 (2022-01) First Release (RC.1)
+# v1.0.1 (2022-13) Issues resolved (RC.2)
 # ---------------------------------------------------------------------------- #
 #
 ############################################################################################################
@@ -719,7 +720,6 @@ function askForCRL()
 ############################################################################################################
 function askForOCSP()
 {
-
 
   ocsp_like="${green}$ocsp_protocol://$rev_string/ocsp${nc}"
   aux="$ocsp_protocol://$rev_string/ocsp"
