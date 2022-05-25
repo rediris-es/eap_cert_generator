@@ -90,7 +90,9 @@ function copyFromTemplate()
 
   for i in "${files[@]}"
   do
-    cp "$parent_path$tmpl_folder/$i.tmpl" "$parent_path/$folder/$i"
+    if [ $i != "ca.cnf" ]; then
+      cp "$parent_path$tmpl_folder/$i.tmpl" "$parent_path/$folder/$i"
+    fi
   done
 
 }
@@ -103,31 +105,33 @@ function fillData()
 
   for i in "${files[@]}"
   do
-    cnf_file_path="$parent_path/$folder/$i"
-    
-    # DEFAULT_CHARSET
-    sed -i "s|DEFAULT_CHARSET|$string_mask|" "$cnf_file_path"
-    # DEFAULT_COUNTRY_NAME
-    sed -i "s|DEFAULT_COUNTRY_NAME|$countryname|" "$cnf_file_path"
-    # DEFAULT_STATE
-    sed -i "s|DEFAULT_STATE|$state|" "$cnf_file_path"
-    # DEFAULT_LOCALITY
-    sed -i "s|DEFAULT_LOCALITY|$locality|" "$cnf_file_path"
-    # DEFAULT_ORGANIZATION_NAME
-    sed -i "s|DEFAULT_ORGANIZATION_NAME|$organizationname|" "$cnf_file_path"
-    # DEFAULT_CRL
-    sed -i "s|DEFAULT_CRL|$crl|" "$cnf_file_path"
-    # DEFAULT OCSP
-    sed -i "s|DEFAULT_OCSP|$ocsp|" "$cnf_file_path"
-    # DEFAULT PASSWORD
-    sed -i "s|DEFAULT_PASSWORD|$password|" "$cnf_file_path"
-    # DEFAULT COMMON NAME
-    sed -i "s|DEFAULT_COMMON_NAME|$commonname|" "$cnf_file_path"
-    # DEFAULT EMAIL
-    sed -i "s|DEFAULT_EMAIL|$email|" "$cnf_file_path"
-    # DEFAULT COMMON SERVER NAME
-    sed -i "s|DEFAULT_SERVER_COMMON_NAME|$commonname|" "$cnf_file_path"
+    if [ $i != "ca.cnf" ]; then
+      cnf_file_path="$parent_path/$folder/$i"
+      
+      # DEFAULT_CHARSET
+      sed -i "s|DEFAULT_CHARSET|$string_mask|" "$cnf_file_path"
+      # DEFAULT_COUNTRY_NAME
+      sed -i "s|DEFAULT_COUNTRY_NAME|$countryname|" "$cnf_file_path"
+      # DEFAULT_STATE
+      sed -i "s|DEFAULT_STATE|$state|" "$cnf_file_path"
+      # DEFAULT_LOCALITY
+      sed -i "s|DEFAULT_LOCALITY|$locality|" "$cnf_file_path"
+      # DEFAULT_ORGANIZATION_NAME
+      sed -i "s|DEFAULT_ORGANIZATION_NAME|$organizationname|" "$cnf_file_path"
+      # DEFAULT_CRL
+      sed -i "s|DEFAULT_CRL|$crl|" "$cnf_file_path"
+      # DEFAULT OCSP
+      sed -i "s|DEFAULT_OCSP|$ocsp|" "$cnf_file_path"
+      # DEFAULT PASSWORD
+      sed -i "s|DEFAULT_PASSWORD|$password|" "$cnf_file_path"
+      # DEFAULT COMMON NAME
+      sed -i "s|DEFAULT_COMMON_NAME|$commonname|" "$cnf_file_path"
+      # DEFAULT EMAIL
+      sed -i "s|DEFAULT_EMAIL|$email|" "$cnf_file_path"
+      # DEFAULT COMMON SERVER NAME
+      sed -i "s|DEFAULT_SERVER_COMMON_NAME|$commonname|" "$cnf_file_path"
 
+    fi
   done
 
 }
