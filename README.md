@@ -4,6 +4,10 @@ Este proyecto permite la generación de certificados de servidor siguiendo las [
 
 El código utiliza como base el [script boostrap y plantillas](https://github.com/FreeRADIUS/freeradius-server/tree/master/raddb/certs) desarrolladas dentro del proyecto FreeRADIUS.
 
+# Requisitos
+
+Es necesario tener instalados en el sistema 'make' y 'openssl'.
+
 # Uso del software
 
 Clonar el repositorio, y ejecutar el script autoexplicativo `cert-gen/eduroam-cert-generator.sh`:
